@@ -46,7 +46,6 @@ export type SwitchFromOrg = {
     type: string;
     enabled: true;
     variants: Variant[];
-    defaultVariant: Variant;
 };
 
 export const TOGGLE_SWITCH = gql`
@@ -56,10 +55,6 @@ export const TOGGLE_SWITCH = gql`
             enabled
             name
             variants {
-                id
-                value
-            }
-            defaultVariant {
                 id
                 value
             }
@@ -81,7 +76,21 @@ export const GET_SWITCHES_BY_ORG = gql`
                 id
                 value
             }
-            defaultVariant {
+            id
+            name
+            createdAt
+            updatedAt
+        }
+    }
+`;
+
+export const CREATE_SWITCH = gql`
+    mutation createSwitch($switch: SwitchCreateInput!) {
+        createOneSwitch(data: $switch) {
+            type
+            enabled
+            name
+            variants {
                 id
                 value
             }

@@ -25,9 +25,7 @@ const LightSwitch: React.FunctionComponent<Props> = ({ lightswitch }) => {
             <Text px="5" fontSize="md">
                 {lightswitch.name}
             </Text>
-            <Text px="5" color="gray.500" fontSize="sm">
-                {lightswitch?.defaultVariant?.value}
-            </Text>
+            <Text px="5" color="gray.500" fontSize="sm"></Text>
 
             <Switch
                 onChange={async e => {
