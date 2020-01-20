@@ -25,6 +25,7 @@ export const SwitchDrawer: React.FunctionComponent<{
     onClose: () => void;
     organizationId: string;
 }> = ({ btnRef, isOpen, onClose, organizationId }) => {
+    console.log(organizationId);
     const [createSwitch] = useMutation<{ createOneSwitch: SwitchFromOrg }>(CREATE_SWITCH, {
         update(cache, { data }) {
             const res = cache.readQuery<{ switches: SwitchFromOrg[] }>({
@@ -51,7 +52,7 @@ export const SwitchDrawer: React.FunctionComponent<{
                         enabled: values.enabled,
                         organization: {
                             connect: {
-                                id: 'ck5dcn0980000ixw1e9fjiqfh',
+                                id: organizationId,
                             },
                         },
                         variants:

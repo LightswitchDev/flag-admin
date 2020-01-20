@@ -16,7 +16,7 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const { data, loading, error } = useQuery<{ switches: SwitchFromOrg[] }>(GET_SWITCHES_BY_ORG, {
         variables: { id: organizationId },
     });
-
+    console.log(organizationId, data);
     const btnRef = React.useRef();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -64,6 +64,8 @@ IndexPage.getInitialProps = async (ctx: NextPageContext & { apolloClient: Apollo
             ctx.apolloClient.writeData({ data: { organizationId } });
         }
     }
+
+    console.log(organizationId);
 
     return { organizationId };
 };
