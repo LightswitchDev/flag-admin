@@ -19,21 +19,22 @@ type FieldChildrenProps = {
     field: { onChange: () => void; onBlur: () => void; name: string; value: any };
 };
 
-export const SwitchDrawer: React.FunctionComponent<{ btnRef: any; isOpen: boolean; onClose: () => void }> = ({
-    btnRef,
-    isOpen,
-    onClose,
-}) => {
+export const SwitchDrawer: React.FunctionComponent<{
+    btnRef: any;
+    isOpen: boolean;
+    onClose: () => void;
+    organizationId: string;
+}> = ({ btnRef, isOpen, onClose, organizationId }) => {
     const [createSwitch] = useMutation<{ createOneSwitch: SwitchFromOrg }>(CREATE_SWITCH, {
         update(cache, { data }) {
             const res = cache.readQuery<{ switches: SwitchFromOrg[] }>({
                 query: GET_SWITCHES_BY_ORG,
-                variables: { id: 'ck5dcn0980000ixw1e9fjiqfh' },
+                variables: { id: organizationId },
             });
             cache.writeQuery({
                 query: GET_SWITCHES_BY_ORG,
                 data: { switches: [...(res?.switches ?? []), data?.createOneSwitch] },
-                variables: { id: 'ck5dcn0980000ixw1e9fjiqfh' },
+                variables: { id: organizationId },
             });
         },
     });
@@ -81,17 +82,21 @@ export const SwitchDrawer: React.FunctionComponent<{ btnRef: any; isOpen: boolea
                         <DrawerCloseButton />
                         <DrawerHeader>Create Switch</DrawerHeader>
                         <Form>
-                            <DrawerBody>
+                            <DrawerBody maxW="m">
                                 <Field name="name">
-                                    {({ field }: FieldChildrenProps) => <Input placeholder="Name" {...field} />}
+                                    {({ field }: FieldChildrenProps) => (
+                                        <Input marginBottom="4px" placeholder="Name" {...field} />
+                                    )}
                                 </Field>
 
                                 <Field name="key">
-                                    {({ field }: FieldChildrenProps) => <Input placeholder="Key" {...field} />}
+                                    {({ field }: FieldChildrenProps) => (
+                                        <Input marginBottom="4px" placeholder="Key" {...field} />
+                                    )}
                                 </Field>
                                 <Field name="type">
                                     {({ field }: FieldChildrenProps) => (
-                                        <Select {...field}>
+                                        <Select marginBottom="4px" maxW="m" {...field}>
                                             <option value="Boolean">Boolean</option>
                                             <option value="Multi">Multi</option>
                                         </Select>
@@ -99,7 +104,12 @@ export const SwitchDrawer: React.FunctionComponent<{ btnRef: any; isOpen: boolea
                                 </Field>
                                 <Field name="enabled">
                                     {({ field }: FieldChildrenProps) => (
-                                        <Switch placeholder="select type" isChecked={field.value} {...field} />
+                                        <Switch
+                                            marginBottom="4px"
+                                            placeholder="select type"
+                                            isChecked={field.value}
+                                            {...field}
+                                        />
                                     )}
                                 </Field>
                             </DrawerBody>
@@ -108,7 +118,7 @@ export const SwitchDrawer: React.FunctionComponent<{ btnRef: any; isOpen: boolea
                                 <Button variant="outline" mr={3} onClick={onClose}>
                                     Cancel
                                 </Button>
-                                <Button type="submit" color="blue" isLoading={isSubmitting}>
+                                <Button type="submit" isLoading={isSubmitting}>
                                     Save
                                 </Button>
                             </DrawerFooter>

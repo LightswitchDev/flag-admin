@@ -1,17 +1,20 @@
 import { useQuery } from '@apollo/react-hooks';
 import { Box, Button, SimpleGrid, useDisclosure } from '@chakra-ui/core';
-import { NextPage } from 'next';
-import Link from 'next/link';
+import { NextPage, NextPageContext } from 'next';
 import * as React from 'react';
 import Layout from '../components/Layout';
 import LightSwitch from '../components/Switch';
-import { GET_SWITCHES_BY_ORG, SwitchFromOrg } from '../gql/switches';
 import { SwitchDrawer } from '../components/SwitchDrawer';
-
-const IndexPage: NextPage = () => {
-    const id = 'ck5dcn0980000ixw1e9fjiqfh';
+import { GET_SWITCHES_BY_ORG, SwitchFromOrg } from '../gql/switches';
+import { parseCookies, setCookie } from 'nookies';
+import { ApolloClient } from 'apollo-boost';
+import { CREATE_ORGANIZATION, CreateOneOrganizationResult } from '../gql/organizations';
+type Props = {
+    organizationId: string;
+};
+const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const { data, loading, error } = useQuery<{ switches: SwitchFromOrg[] }>(GET_SWITCHES_BY_ORG, {
-        variables: { id },
+        variables: { id: organizationId },
     });
 
     const btnRef = React.useRef();
@@ -22,19 +25,18 @@ const IndexPage: NextPage = () => {
     if (!data) return <p>Not found</p>;
     const { switches } = data;
     return (
-        <Layout title="Home | Next.js + TypeScript Example">
-            <h1>Hello Next.js 👋</h1>
-            <p>
-                <Link href="/about">
-                    <a>About</a>
-                </Link>
-            </p>
+        <Layout title="Lightswitch">
             <SimpleGrid maxW="2xl" margin="0 auto" columns={1}>
                 <Box justifySelf="end">
-                    <Button ref={btnRef} size="sm" mb="3" variant="outline" onClick={onOpen}>
+                    <Button borderColor="gray.500" ref={btnRef} size="sm" mb="3" variant="outline" onClick={onOpen}>
                         +
                     </Button>
-                    <SwitchDrawer isOpen={isOpen} onClose={onClose} btnRef={btnRef}></SwitchDrawer>
+                    <SwitchDrawer
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        btnRef={btnRef}
+                        organizationId={organizationId}
+                    ></SwitchDrawer>
                 </Box>
                 <Box>
                     {switches.map(lightswitch => (
@@ -44,6 +46,26 @@ const IndexPage: NextPage = () => {
             </SimpleGrid>
         </Layout>
     );
+};
+
+IndexPage.getInitialProps = async (ctx: NextPageContext & { apolloClient: ApolloClient<any> }): Promise<Props> => {
+    const cookies = parseCookies(ctx);
+    let organizationId: string | undefined = cookies['lightswitch'];
+    if (!organizationId) {
+        console.log('no cookie');
+        const { data } = await ctx.apolloClient.mutate<CreateOneOrganizationResult>({
+            mutation: CREATE_ORGANIZATION,
+            variables: { organization: {} },
+        });
+        organizationId = data?.createOneOrganization?.id ?? '';
+
+        if (organizationId) {
+            setCookie(ctx, 'lightswitch', organizationId, { maxAge: 60 * 60 * 24 * 30 * 1000 });
+            ctx.apolloClient.writeData({ data: { organizationId } });
+        }
+    }
+
+    return { organizationId };
 };
 
 export default IndexPage;

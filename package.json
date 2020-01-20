@@ -23,6 +23,7 @@
     "isomorphic-unfetch": "3.0.0",
     "next": "latest",
     "next-with-apollo": "^4.3.0",
+    "nookies": "^2.0.8",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-hook-form": "^4.5.3"

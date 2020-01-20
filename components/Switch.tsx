@@ -15,9 +15,11 @@ const LightSwitch: React.FunctionComponent<Props> = ({ lightswitch }) => {
             justifyContent="space-between"
             marginBottom="4px"
             rounded="lg"
-            borderColor="gray.300"
+            borderColor="red.400 !important"
             border="1px"
+            paddingTop="12px"
             d="flex"
+            minH="50px"
             id={lightswitch.name}
             overflow="hidden"
             alignItems="baseline"
@@ -25,7 +27,7 @@ const LightSwitch: React.FunctionComponent<Props> = ({ lightswitch }) => {
             <Text px="5" fontSize="md">
                 {lightswitch.name}
             </Text>
-            <Text px="5" color="gray.500" fontSize="sm"></Text>
+            <Text px="5" color="gray.200" fontSize="sm"></Text>
 
             <Switch
                 onChange={async e => {
