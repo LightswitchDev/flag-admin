@@ -1,14 +1,15 @@
 import { useQuery } from '@apollo/react-hooks';
 import { Box, Button, SimpleGrid, useDisclosure } from '@chakra-ui/core';
+import { ApolloClient } from 'apollo-boost';
 import { NextPage, NextPageContext } from 'next';
+import { parseCookies, setCookie } from 'nookies';
 import * as React from 'react';
+import APIKeysList from '../components/APIKeys';
 import Layout from '../components/Layout';
 import LightSwitch from '../components/Switch';
 import { SwitchDrawer } from '../components/SwitchDrawer';
+import { CreateOneOrganizationResult, CREATE_ORGANIZATION } from '../gql/organizations';
 import { GET_SWITCHES_BY_ORG, SwitchFromOrg } from '../gql/switches';
-import { parseCookies, setCookie } from 'nookies';
-import { ApolloClient } from 'apollo-boost';
-import { CREATE_ORGANIZATION, CreateOneOrganizationResult } from '../gql/organizations';
 type Props = {
     organizationId: string;
 };
@@ -16,7 +17,7 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const { data, loading, error } = useQuery<{ switches: SwitchFromOrg[] }>(GET_SWITCHES_BY_ORG, {
         variables: { id: organizationId },
     });
-    console.log(organizationId, data);
+
     const btnRef = React.useRef();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -26,6 +27,7 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const { switches } = data;
     return (
         <Layout title="Lightswitch">
+            <APIKeysList organizationId={organizationId} />
             <SimpleGrid maxW="2xl" margin="0 auto" columns={1}>
                 <Box justifySelf="end">
                     <Button borderColor="gray.500" ref={btnRef} size="sm" mb="3" variant="outline" onClick={onOpen}>
@@ -55,7 +57,7 @@ IndexPage.getInitialProps = async (ctx: NextPageContext & { apolloClient: Apollo
         console.log('no cookie');
         const { data } = await ctx.apolloClient.mutate<CreateOneOrganizationResult>({
             mutation: CREATE_ORGANIZATION,
-            variables: { organization: {} },
+            variables: { organization: { keys: { create: [{}] } } },
         });
         organizationId = data?.createOneOrganization?.id ?? '';
 
