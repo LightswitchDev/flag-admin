@@ -1,7 +1,7 @@
+import { useMutation } from '@apollo/react-hooks';
+import { Box, Switch, Text, useToast } from '@chakra-ui/core';
 import * as React from 'react';
 import { SwitchFromOrg, TOGGLE_SWITCH } from '../gql/switches';
-import { Box, Switch, Text, useToast } from '@chakra-ui/core';
-import { useMutation } from '@apollo/react-hooks';
 
 type Props = {
     lightswitch: SwitchFromOrg;
@@ -15,16 +15,13 @@ const LightSwitch: React.FunctionComponent<Props> = ({ lightswitch }) => {
             justifyContent="space-between"
             marginBottom="4px"
             rounded="lg"
-            borderColor="red.400 !important"
-            border="1px"
             paddingTop="12px"
             d="flex"
             minH="50px"
             id={lightswitch.name}
-            overflow="hidden"
             alignItems="baseline"
         >
-            <Text px="5" fontSize="md">
+            <Text px="5" color="gray.600" fontSize="md">
                 {lightswitch.name}
             </Text>
             <Text px="5" color="gray.200" fontSize="sm"></Text>

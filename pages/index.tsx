@@ -1,5 +1,16 @@
 import { useQuery } from '@apollo/react-hooks';
-import { Box, Button, SimpleGrid, useDisclosure } from '@chakra-ui/core';
+import {
+    Accordion,
+    AccordionHeader,
+    AccordionIcon,
+    AccordionItem,
+    AccordionPanel,
+    Box,
+    Button,
+    Stack,
+    useDisclosure,
+    Divider,
+} from '@chakra-ui/core';
 import { ApolloClient } from 'apollo-boost';
 import { NextPage, NextPageContext } from 'next';
 import { parseCookies, setCookie } from 'nookies';
@@ -27,26 +38,58 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const { switches } = data;
     return (
         <Layout title="Lightswitch">
-            <SimpleGrid maxW="2xl" margin="0 auto" columns={1}>
-                <APIKeysList organizationId={organizationId} />
+            <Stack maxW="2xl" margin="0 auto" pb="10px">
+                <Box shadow="md" borderWidth="1px" flex="1" rounded="md">
+                    <Accordion allowToggle defaultIndex={-1}>
+                        <AccordionItem>
+                            <AccordionHeader>
+                                <AccordionIcon />
+                                <Box flex="1" ml="9px" color="gray.600" textAlign="left">
+                                    Get your Client Keys
+                                </Box>
+                            </AccordionHeader>
+                            <AccordionPanel pb={4}>
+                                <APIKeysList organizationId={organizationId} />
+                            </AccordionPanel>
+                        </AccordionItem>
+                    </Accordion>
+                </Box>
 
-                <Box justifySelf="end">
-                    <Button borderColor="gray.500" ref={btnRef} size="sm" mb="3" variant="outline" onClick={onOpen}>
-                        +
-                    </Button>
+                <Box flex="1">
                     <SwitchDrawer
                         isOpen={isOpen}
                         onClose={onClose}
                         btnRef={btnRef}
                         organizationId={organizationId}
                     ></SwitchDrawer>
+                    <Button
+                        float="right"
+                        borderColor="gray.200"
+                        color="gray.500"
+                        ref={btnRef}
+                        size="sm"
+                        shadow="sm"
+                        rounded="md"
+                        borderWidth="1px"
+                        mr="20px"
+                        backgroundColor="white"
+                        height="22px"
+                        minW="40px"
+                        variant="solid"
+                        onClick={onOpen}
+                    >
+                        +
+                    </Button>
                 </Box>
-                <Box>
-                    {switches.map(lightswitch => (
-                        <LightSwitch lightswitch={lightswitch}></LightSwitch>
+                <Box shadow="md" borderWidth="1px" flex="1" rounded="md">
+                    {switches.map((lightswitch, i) => (
+                        <Box>
+                            <LightSwitch lightswitch={lightswitch}></LightSwitch>
+                            {i !== switches.length - 1 && <Divider />}
+                        </Box>
                     ))}
                 </Box>
-            </SimpleGrid>
+            </Stack>
         </Layout>
     );
 };
