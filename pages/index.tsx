@@ -27,8 +27,9 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const { switches } = data;
     return (
         <Layout title="Lightswitch">
-            <APIKeysList organizationId={organizationId} />
             <SimpleGrid maxW="2xl" margin="0 auto" columns={1}>
+                <APIKeysList organizationId={organizationId} />
+
                 <Box justifySelf="end">
                     <Button borderColor="gray.500" ref={btnRef} size="sm" mb="3" variant="outline" onClick={onOpen}>
                         +
