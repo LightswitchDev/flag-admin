@@ -70,10 +70,9 @@ export const SwitchDrawer: React.FunctionComponent<{
                                 : undefined,
                     },
                 };
-                const result = await createSwitch({ variables });
+                await createSwitch({ variables });
                 setSubmitting(false);
                 onClose();
-                console.log(result);
             }}
         >
             {({ isSubmitting }) => (

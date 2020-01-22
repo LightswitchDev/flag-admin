@@ -98,7 +98,6 @@ IndexPage.getInitialProps = async (ctx: NextPageContext & { apolloClient: Apollo
     const cookies = parseCookies(ctx);
     let organizationId: string | undefined = cookies['lightswitch'];
     if (!organizationId) {
-        console.log('no cookie');
         const { data } = await ctx.apolloClient.mutate<CreateOneOrganizationResult>({
             mutation: CREATE_ORGANIZATION,
             variables: { organization: { keys: { create: [{}] } } },
@@ -110,8 +109,6 @@ IndexPage.getInitialProps = async (ctx: NextPageContext & { apolloClient: Apollo
             ctx.apolloClient.writeData({ data: { organizationId } });
         }
     }
-
-    console.log(organizationId);
 
     return { organizationId };
 };
