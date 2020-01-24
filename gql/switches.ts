@@ -49,7 +49,7 @@ export type SwitchFromOrg = {
 };
 
 export const TOGGLE_SWITCH = gql`
-    mutation enableSwitch($id: ID, $enabled: Boolean) {
+    mutation enableSwitch($id: String, $enabled: Boolean) {
         updateOneSwitch(data: { enabled: $enabled }, where: { id: $id }) {
             type
             enabled

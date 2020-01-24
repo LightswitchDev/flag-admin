@@ -28,7 +28,7 @@ export type CreateOneOrganizationResult = {
 };
 
 export const UPDATE_ORGANIZATION_NAME = gql`
-    mutation updateOrganizationName($id: ID!, $name: String!) {
+    mutation updateOrganizationName($id: String!, $name: String!) {
         updateOneOrganization(data: { name: $name }, where: { id: $id }) {
             name
             id
@@ -37,7 +37,7 @@ export const UPDATE_ORGANIZATION_NAME = gql`
 `;
 
 export const GET_ORGANIZATION = gql`
-    query getOrganization($id: ID!) {
+    query getOrganization($id: String!) {
         organization(where: { id: $id }) {
             id
             keys {
