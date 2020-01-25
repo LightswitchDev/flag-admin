@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Organization, GET_ORGANIZATION, Key } from '../gql/organizations';
 import { Box, IconButton, Text, Tooltip, useToast } from '@chakra-ui/core';
 import { useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { Organization, ORG_URL_KEY } from '../data/organizations';
+import useSWR from 'swr';
 
 type Props = {
     organizationId: string;
@@ -33,7 +34,7 @@ const TooltipWithCopy: React.FunctionComponent<{ text: string }> = ({ children, 
     );
 };
 
-const SecretDisplay: React.FunctionComponent<{ k: Key }> = ({ k }) => {
+const SecretDisplay: React.FunctionComponent<{ k: string }> = ({ k }) => {
     const [isVisible, displayKey] = useState(false);
     return (
         <Box marginBottom="4px" rounded="lg" borderColor="gray.400" justifyContent="left" d="flex" maxW="small">
@@ -41,13 +42,13 @@ const SecretDisplay: React.FunctionComponent<{ k: Key }> = ({ k }) => {
                 Client Secret
             </Text>
 
-            <TooltipWithCopy text={k.id}>
+            <TooltipWithCopy text={k}>
                 <Text pl="5px" pr="5px" as="button" textAlign="left" fontSize="s">
-                    {isVisible ? k.id : '*'.repeat(15)}
+                    {isVisible ? k : '*'.repeat(15)}
                 </Text>
             </TooltipWithCopy>
             <Box>
-                <TooltipWithCopy text={k.id}>
+                <TooltipWithCopy text={k}>
                     <IconButton
                         variant="outline"
                         aria-label="Show Key"
@@ -67,12 +68,16 @@ const APIKeysList: React.FunctionComponent<Props> = ({ organizationId }) => {
     // const { data, loading, error } = useQuery<{ organization: Organization }>(GET_ORGANIZATION, {
     //     variables: { id: organizationId },
     // });
-    // if (loading) return <p>Loading</p>;
-    // if (error) return <p>ERROR: {error.message}</p>;
-    // if (!data) return <p>Not found</p>;
-    const {
-        organization: { keys, id },
-    } = { organization: { keys: [], id: '' } };
+
+    const { data: organization, error } = useSWR<Organization>(`${ORG_URL_KEY}/${organizationId}`, {
+        refreshWhenHidden: true,
+        revalidateOnFocus: true,
+    });
+    if (!organization) return <p>Loading</p>;
+    if (error) return <p>ERROR: {error.message}</p>;
+
+    const { key, id } = organization;
+
     return (
         <Box>
             <Box maxW="s" display="flex">
@@ -85,9 +90,8 @@ const APIKeysList: React.FunctionComponent<Props> = ({ organizationId }) => {
                     </Text>
                 </TooltipWithCopy>
             </Box>
-            {keys.map(k => (
-                <SecretDisplay k={k} />
-            ))}
+
+            <SecretDisplay k={key} />
         </Box>
     );
 };

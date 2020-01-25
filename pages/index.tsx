@@ -20,8 +20,7 @@ import APIKeysList from '../components/APIKeys';
 import Layout from '../components/Layout';
 import LightSwitch from '../components/Switch';
 import { SwitchDrawer } from '../components/SwitchDrawer';
-import { CreateOneOrganizationResult, CREATE_ORGANIZATION } from '../gql/organizations';
-import { GET_SWITCHES_BY_ORG, SwitchFromOrg } from '../gql/switches';
+import { createOrganization } from '../data/organizations';
 type Props = {
     organizationId: string;
 };
@@ -99,14 +98,11 @@ IndexPage.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
     const cookies = parseCookies(ctx);
     let organizationId: string | undefined = cookies['lightswitch'];
     if (!organizationId) {
-        // const { data } = await ctx.apolloClient.mutate<CreateOneOrganizationResult>({
-        //     mutation: CREATE_ORGANIZATION,
-        //     variables: { organization: { keys: { create: [{}] } } },
-        // });
+        const { organization } = await createOrganization({ shouldMutate: true });
+        organizationId = organization.id;
 
         if (organizationId) {
             setCookie(ctx, 'lightswitch', organizationId, { maxAge: 60 * 60 * 24 * 30 * 1000 });
-            // ctx.apolloClient.writeData({ data: { organizationId } });
         }
     }
 
