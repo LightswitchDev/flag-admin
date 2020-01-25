@@ -1,23 +1,24 @@
 import App from 'next/app';
-import { ApolloProvider } from '@apollo/react-hooks';
-import withApollo from '../lib/withApollo';
 import { WithApolloProps } from 'next-with-apollo';
 import { ThemeProvider, CSSReset } from '@chakra-ui/core';
 import theme from '../theme';
+import fetch from 'isomorphic-unfetch';
+
+import { SWRConfig } from 'swr';
 
 class AppWrapper extends App<WithApolloProps<any>> {
     render() {
-        const { Component, pageProps, apollo } = this.props;
+        const { Component, pageProps } = this.props;
 
         return (
             <ThemeProvider theme={theme}>
                 <CSSReset />
-                <ApolloProvider client={apollo}>
+                <SWRConfig value={{ refreshInterval: 3000 }}>
                     <Component {...pageProps} />
-                </ApolloProvider>
+                </SWRConfig>
             </ThemeProvider>
         );
     }
 }
 
-export default withApollo(AppWrapper);
+export default AppWrapper;

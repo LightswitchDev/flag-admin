@@ -1,4 +1,5 @@
-import { useQuery } from '@apollo/react-hooks';
+import useSWR, { mutate } from 'swr';
+
 import {
     Accordion,
     AccordionHeader,
@@ -11,7 +12,7 @@ import {
     useDisclosure,
     Divider,
 } from '@chakra-ui/core';
-import { ApolloClient } from 'apollo-boost';
+
 import { NextPage, NextPageContext } from 'next';
 import { parseCookies, setCookie } from 'nookies';
 import * as React from 'react';
@@ -25,17 +26,17 @@ type Props = {
     organizationId: string;
 };
 const IndexPage: NextPage<Props> = ({ organizationId }) => {
-    const { data, loading, error } = useQuery<{ switches: SwitchFromOrg[] }>(GET_SWITCHES_BY_ORG, {
-        variables: { id: organizationId },
-    });
-
-    const btnRef = React.useRef();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const btnRef = React.useRef();
 
-    if (loading) return <p>Loading</p>;
-    if (error) return <p>ERROR: {error.message}</p>;
-    if (!data) return <p>Not found</p>;
-    const { switches } = data;
+    // const { data, loading, error } = useQuery<{ switches: SwitchFromOrg[] }>(GET_SWITCHES_BY_ORG, {
+    //     variables: { id: organizationId },
+    // });
+
+    // if (loading) return <p>Loading</p>;
+    // if (error) return <p>ERROR: {error.message}</p>;
+    // if (!data) return <p>Not found</p>;
+    const { switches } = { switches: [] };
     return (
         <Layout title="Lightswitch">
             <Stack maxW="2xl" margin="0 auto" pb="10px">
@@ -94,19 +95,18 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     );
 };
 
-IndexPage.getInitialProps = async (ctx: NextPageContext & { apolloClient: ApolloClient<any> }): Promise<Props> => {
+IndexPage.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
     const cookies = parseCookies(ctx);
     let organizationId: string | undefined = cookies['lightswitch'];
     if (!organizationId) {
-        const { data } = await ctx.apolloClient.mutate<CreateOneOrganizationResult>({
-            mutation: CREATE_ORGANIZATION,
-            variables: { organization: { keys: { create: [{}] } } },
-        });
-        organizationId = data?.createOneOrganization?.id ?? '';
+        // const { data } = await ctx.apolloClient.mutate<CreateOneOrganizationResult>({
+        //     mutation: CREATE_ORGANIZATION,
+        //     variables: { organization: { keys: { create: [{}] } } },
+        // });
 
         if (organizationId) {
             setCookie(ctx, 'lightswitch', organizationId, { maxAge: 60 * 60 * 24 * 30 * 1000 });
-            ctx.apolloClient.writeData({ data: { organizationId } });
+            // ctx.apolloClient.writeData({ data: { organizationId } });
         }
     }
 

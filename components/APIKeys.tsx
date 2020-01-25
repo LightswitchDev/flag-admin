@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useQuery } from '@apollo/react-hooks';
 import { Organization, GET_ORGANIZATION, Key } from '../gql/organizations';
 import { Box, IconButton, Text, Tooltip, useToast } from '@chakra-ui/core';
 import { useState } from 'react';
@@ -65,15 +64,15 @@ const SecretDisplay: React.FunctionComponent<{ k: Key }> = ({ k }) => {
 };
 
 const APIKeysList: React.FunctionComponent<Props> = ({ organizationId }) => {
-    const { data, loading, error } = useQuery<{ organization: Organization }>(GET_ORGANIZATION, {
-        variables: { id: organizationId },
-    });
-    if (loading) return <p>Loading</p>;
-    if (error) return <p>ERROR: {error.message}</p>;
-    if (!data) return <p>Not found</p>;
+    // const { data, loading, error } = useQuery<{ organization: Organization }>(GET_ORGANIZATION, {
+    //     variables: { id: organizationId },
+    // });
+    // if (loading) return <p>Loading</p>;
+    // if (error) return <p>ERROR: {error.message}</p>;
+    // if (!data) return <p>Not found</p>;
     const {
         organization: { keys, id },
-    } = data;
+    } = { organization: { keys: [], id: '' } };
     return (
         <Box>
             <Box maxW="s" display="flex">

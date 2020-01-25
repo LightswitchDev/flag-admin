@@ -12,7 +12,6 @@ import {
     Switch,
 } from '@chakra-ui/core';
 import { Formik, Form, Field } from 'formik';
-import { useMutation } from '@apollo/react-hooks';
 import { CREATE_SWITCH, SwitchFromOrg, GET_SWITCHES_BY_ORG } from '../gql/switches';
 
 type FieldChildrenProps = {
@@ -26,19 +25,20 @@ export const SwitchDrawer: React.FunctionComponent<{
     organizationId: string;
 }> = ({ btnRef, isOpen, onClose, organizationId }) => {
     console.log(organizationId);
-    const [createSwitch] = useMutation<{ createOneSwitch: SwitchFromOrg }>(CREATE_SWITCH, {
-        update(cache, { data }) {
-            const res = cache.readQuery<{ switches: SwitchFromOrg[] }>({
-                query: GET_SWITCHES_BY_ORG,
-                variables: { id: organizationId },
-            });
-            cache.writeQuery({
-                query: GET_SWITCHES_BY_ORG,
-                data: { switches: [...(res?.switches ?? []), data?.createOneSwitch] },
-                variables: { id: organizationId },
-            });
-        },
-    });
+    // const [createSwitch] = useMutation<{ createOneSwitch: SwitchFromOrg }>(CREATE_SWITCH, {
+    //     update(cache, { data }) {
+    //         const res = cache.readQuery<{ switches: SwitchFromOrg[] }>({
+    //             query: GET_SWITCHES_BY_ORG,
+    //             variables: { id: organizationId },
+    //         });
+    //         cache.writeQuery({
+    //             query: GET_SWITCHES_BY_ORG,
+    //             data: { switches: [...(res?.switches ?? []), data?.createOneSwitch] },
+    //             variables: { id: organizationId },
+    //         });
+    //     },
+    // });
+    const createSwitch = (test: any) => null;
     return (
         <Formik
             initialValues={{ name: '', key: '', type: 'Boolean', enabled: true }}
