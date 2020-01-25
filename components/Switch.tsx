@@ -1,4 +1,3 @@
-import { useMutation } from '@apollo/react-hooks';
 import { Box, Switch, Text, useToast } from '@chakra-ui/core';
 import * as React from 'react';
 import { SwitchFromOrg, TOGGLE_SWITCH } from '../gql/switches';
@@ -8,7 +7,10 @@ type Props = {
 };
 
 const LightSwitch: React.FunctionComponent<Props> = ({ lightswitch }) => {
-    const [toggleSwitch] = useMutation<SwitchFromOrg>(TOGGLE_SWITCH);
+    //const [toggleSwitch] = useMutation<SwitchFromOrg>(TOGGLE_SWITCH);
+
+    const toggleSwitch = (test: any) => null;
+
     const switchToggledToast = useToast();
     return (
         <Box
