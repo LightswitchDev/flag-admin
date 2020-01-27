@@ -19,19 +19,23 @@ const LightSwitch: React.FunctionComponent<Props> = ({
     console.log(lightswitch.enabled);
     return (
         <Box
-            justifyContent="space-between"
+            gridColumnGap="15px"
             marginBottom="4px"
             rounded="lg"
             paddingTop="12px"
-            d="flex"
+            alignItems="center"
+            justifyItems="end"
+            d="grid"
+            gridTemplateColumns=".5fr 1.5fr .4fr .3fr"
             minH="50px"
             id={lightswitch.name}
-            alignItems="baseline"
         >
-            <Text px="5" color="gray.600" fontSize="md">
+            <Text px="5" justifySelf="start" color="gray.600" fontSize="md">
                 {lightswitch.name}
             </Text>
-            <Text px="5" color="gray.200" fontSize="sm"></Text>
+            <Text justifySelf="start" color="gray.300" fontSize="sm">
+                {lightswitch.key}
+            </Text>
 
             <Switch
                 onChange={async e => {
@@ -61,20 +65,22 @@ const LightSwitch: React.FunctionComponent<Props> = ({
                 }}
                 isChecked={lightswitch.enabled}
                 color="gray"
-                d="flex"
-                alignItems="right"
+                d="grid"
                 size="md"
+                justifySelf="end"
                 px="5"
             ></Switch>
             <IconButton
                 variant="ghost"
                 icon="edit"
+                d="grid"
+                justifySelf="end"
                 aria-label="Edit Switch"
                 size="sm"
-                ml="8px"
+                mr="8px"
                 onClick={() => {
                     setCurrentLightswitch(lightswitch);
-                    setTimeout(onOpen, 100);
+                    onOpen();
                 }}
             ></IconButton>
         </Box>
