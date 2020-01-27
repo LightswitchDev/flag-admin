@@ -21,6 +21,7 @@ import Layout from '../components/Layout';
 import LightSwitch from '../components/Switch';
 import { SwitchDrawer } from '../components/SwitchDrawer';
 import { createOrganization, ORG_URL_KEY, Organization } from '../data/organizations';
+import { SwitchFromOrg } from '../data/switches';
 type Props = {
     organizationId: string;
 };
@@ -29,8 +30,9 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const btnRef = React.useRef();
     const { data: organization, error } = useSWR<Organization>(`${ORG_URL_KEY}/${organizationId}`, {
         refreshWhenHidden: true,
-        revalidateOnFocus: true,
+        revalidateOnFocus: false,
     });
+    const [currentLightswitch, setCurrentLightswitch] = React.useState<SwitchFromOrg | undefined>();
 
     if (!organization) return <p>Loading</p>;
     if (error) return <p>ERROR: {error.message}</p>;
@@ -57,6 +59,7 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
 
                 <Box flex="1">
                     <SwitchDrawer
+                        lightswitch={currentLightswitch}
                         isOpen={isOpen}
                         onClose={onClose}
                         btnRef={btnRef}
@@ -84,7 +87,12 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
                 <Box shadow="md" borderWidth="1px" flex="1" rounded="md">
                     {lightswitches.map((lightswitch, i) => (
                         <Box>
-                            <LightSwitch lightswitch={lightswitch} organizationId={organizationId}></LightSwitch>
+                            <LightSwitch
+                                onOpen={onOpen}
+                                lightswitch={lightswitch}
+                                organizationId={organizationId}
+                                setCurrentLightswitch={setCurrentLightswitch}
+                            ></LightSwitch>
                             {i !== lightswitches.length - 1 && <Divider />}
                         </Box>
                     ))}

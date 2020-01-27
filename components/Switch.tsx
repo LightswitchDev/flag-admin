@@ -1,14 +1,22 @@
-import { Box, Switch, Text, useToast } from '@chakra-ui/core';
+import { Box, Switch, Text, useToast, IconButton } from '@chakra-ui/core';
 import * as React from 'react';
 import { SwitchFromOrg, createUpdateSwitch } from '../data/switches';
 
 type Props = {
     lightswitch: SwitchFromOrg;
     organizationId: string;
+    onOpen: () => void;
+    setCurrentLightswitch: (lightswitch: SwitchFromOrg) => void;
 };
 
-const LightSwitch: React.FunctionComponent<Props> = ({ lightswitch, organizationId }) => {
+const LightSwitch: React.FunctionComponent<Props> = ({
+    lightswitch,
+    organizationId,
+    onOpen,
+    setCurrentLightswitch,
+}) => {
     const switchToggledToast = useToast();
+    console.log(lightswitch.enabled);
     return (
         <Box
             justifyContent="space-between"
@@ -51,13 +59,24 @@ const LightSwitch: React.FunctionComponent<Props> = ({ lightswitch, organization
                         });
                     }
                 }}
-                defaultIsChecked={lightswitch.enabled}
+                isChecked={lightswitch.enabled}
                 color="gray"
                 d="flex"
                 alignItems="right"
                 size="md"
                 px="5"
             ></Switch>
+            <IconButton
+                variant="ghost"
+                icon="edit"
+                aria-label="Edit Switch"
+                size="sm"
+                ml="8px"
+                onClick={() => {
+                    setCurrentLightswitch(lightswitch);
+                    setTimeout(onOpen, 100);
+                }}
+            ></IconButton>
         </Box>
     );
 };

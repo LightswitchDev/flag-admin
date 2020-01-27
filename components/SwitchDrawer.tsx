@@ -12,33 +12,36 @@ import {
     Switch,
 } from '@chakra-ui/core';
 import { Formik, Form, Field } from 'formik';
-import { createUpdateSwitch } from '../data/switches';
+import { createUpdateSwitch, SwitchFromOrg } from '../data/switches';
 
 type FieldChildrenProps = {
     field: { onChange: () => void; onBlur: () => void; name: string; value: any };
 };
 
-export const SwitchDrawer: React.FunctionComponent<{
+type Props = {
     btnRef: any;
     isOpen: boolean;
     onClose: () => void;
     organizationId: string;
-}> = ({ btnRef, isOpen, onClose, organizationId }) => {
-    console.log(organizationId);
+    lightswitch?: SwitchFromOrg;
+};
+
+export const SwitchDrawer: React.FunctionComponent<Props> = ({
+    btnRef,
+    isOpen,
+    onClose,
+    organizationId,
+    lightswitch,
+}) => {
+    console.log(organizationId, lightswitch);
 
     return (
         <Formik
-            initialValues={{ name: '', key: '', type: 'Boolean', enabled: true }}
+            enableReinitialize
+            initialValues={lightswitch ?? { name: '', key: '', type: 'Boolean', enabled: true }}
             onSubmit={async (values, { setSubmitting }) => {
                 setSubmitting(true);
-                const variables = {
-                    switch: {
-                        name: values.name,
-                        key: values.key,
-                        type: values.type,
-                        enabled: values.enabled,
-                    },
-                };
+
                 await createUpdateSwitch(
                     organizationId,
                     {
@@ -58,7 +61,7 @@ export const SwitchDrawer: React.FunctionComponent<{
                     <DrawerOverlay />
                     <DrawerContent>
                         <DrawerCloseButton />
-                        <DrawerHeader>Create Switch</DrawerHeader>
+                        <DrawerHeader>{lightswitch ? `Edit ${lightswitch.name}` : 'Create Lightswitch'}</DrawerHeader>
                         <Form>
                             <DrawerBody maxW="m">
                                 <Field name="name">
