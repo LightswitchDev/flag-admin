@@ -12,7 +12,7 @@ import {
     Switch,
 } from '@chakra-ui/core';
 import { Formik, Form, Field } from 'formik';
-import { CREATE_SWITCH, SwitchFromOrg, GET_SWITCHES_BY_ORG } from '../gql/switches';
+import { createUpdateSwitch } from '../data/switches';
 
 type FieldChildrenProps = {
     field: { onChange: () => void; onBlur: () => void; name: string; value: any };
@@ -25,20 +25,7 @@ export const SwitchDrawer: React.FunctionComponent<{
     organizationId: string;
 }> = ({ btnRef, isOpen, onClose, organizationId }) => {
     console.log(organizationId);
-    // const [createSwitch] = useMutation<{ createOneSwitch: SwitchFromOrg }>(CREATE_SWITCH, {
-    //     update(cache, { data }) {
-    //         const res = cache.readQuery<{ switches: SwitchFromOrg[] }>({
-    //             query: GET_SWITCHES_BY_ORG,
-    //             variables: { id: organizationId },
-    //         });
-    //         cache.writeQuery({
-    //             query: GET_SWITCHES_BY_ORG,
-    //             data: { switches: [...(res?.switches ?? []), data?.createOneSwitch] },
-    //             variables: { id: organizationId },
-    //         });
-    //     },
-    // });
-    const createSwitch = (test: any) => null;
+
     return (
         <Formik
             initialValues={{ name: '', key: '', type: 'Boolean', enabled: true }}
@@ -50,27 +37,18 @@ export const SwitchDrawer: React.FunctionComponent<{
                         key: values.key,
                         type: values.type,
                         enabled: values.enabled,
-                        organization: {
-                            connect: {
-                                id: organizationId,
-                            },
-                        },
-                        variants:
-                            values.type === 'Boolean'
-                                ? {
-                                      create: [
-                                          {
-                                              value: 'true',
-                                          },
-                                          {
-                                              value: 'true',
-                                          },
-                                      ],
-                                  }
-                                : undefined,
                     },
                 };
-                await createSwitch({ variables });
+                await createUpdateSwitch(
+                    organizationId,
+                    {
+                        name: values.name,
+                        key: values.key,
+                        type: values.type,
+                        enabled: values.enabled,
+                    },
+                    { shouldMutate: true, shouldRevalidate: false },
+                );
                 setSubmitting(false);
                 onClose();
             }}

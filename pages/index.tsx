@@ -20,22 +20,22 @@ import APIKeysList from '../components/APIKeys';
 import Layout from '../components/Layout';
 import LightSwitch from '../components/Switch';
 import { SwitchDrawer } from '../components/SwitchDrawer';
-import { createOrganization } from '../data/organizations';
+import { createOrganization, ORG_URL_KEY, Organization } from '../data/organizations';
 type Props = {
     organizationId: string;
 };
 const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = React.useRef();
+    const { data: organization, error } = useSWR<Organization>(`${ORG_URL_KEY}/${organizationId}`, {
+        refreshWhenHidden: true,
+        revalidateOnFocus: true,
+    });
 
-    // const { data, loading, error } = useQuery<{ switches: SwitchFromOrg[] }>(GET_SWITCHES_BY_ORG, {
-    //     variables: { id: organizationId },
-    // });
+    if (!organization) return <p>Loading</p>;
+    if (error) return <p>ERROR: {error.message}</p>;
 
-    // if (loading) return <p>Loading</p>;
-    // if (error) return <p>ERROR: {error.message}</p>;
-    // if (!data) return <p>Not found</p>;
-    const { switches } = { switches: [] };
+    const { lightswitches } = organization;
     return (
         <Layout title="Lightswitch">
             <Stack maxW="2xl" margin="0 auto" pb="10px">
@@ -82,10 +82,10 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
                     </Button>
                 </Box>
                 <Box shadow="md" borderWidth="1px" flex="1" rounded="md">
-                    {switches.map((lightswitch, i) => (
+                    {lightswitches.map((lightswitch, i) => (
                         <Box>
-                            <LightSwitch lightswitch={lightswitch}></LightSwitch>
-                            {i !== switches.length - 1 && <Divider />}
+                            <LightSwitch lightswitch={lightswitch} organizationId={organizationId}></LightSwitch>
+                            {i !== lightswitches.length - 1 && <Divider />}
                         </Box>
                     ))}
                 </Box>
@@ -96,7 +96,7 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
 
 IndexPage.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
     const cookies = parseCookies(ctx);
-    let organizationId: string | undefined = cookies['lightswitch'];
+    let organizationId: string = cookies['lightswitch'];
     if (!organizationId) {
         const { organization } = await createOrganization({ shouldMutate: true });
         organizationId = organization.id;

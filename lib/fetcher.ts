@@ -4,11 +4,19 @@ const defaultHeaders = {
     'Content-Type': 'application/json',
 };
 
-const fetcher = <T>(url: string, data?: RequestInit): Promise<T> => {
+interface RequestInitWithBody extends RequestInit {
+    body?: any;
+}
+
+const fetcher = <T>(url: string, data?: RequestInitWithBody): Promise<T> => {
     const BASE_URL = 'http://localhost:8080';
     const fullUrl = `${url.startsWith('/') ? BASE_URL : ''}${url}`;
     console.log(fullUrl);
-    return fetch(fullUrl, { ...data, headers: { ...defaultHeaders, ...data?.headers } }).then(r => r.json());
+    return fetch(fullUrl, {
+        ...data,
+        headers: { ...defaultHeaders, ...data?.headers },
+        body: data?.body ? JSON.stringify(data.body) : undefined,
+    }).then(r => r.json());
 };
 
 export default fetcher;

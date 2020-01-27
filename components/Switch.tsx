@@ -1,16 +1,13 @@
 import { Box, Switch, Text, useToast } from '@chakra-ui/core';
 import * as React from 'react';
-import { SwitchFromOrg, TOGGLE_SWITCH } from '../gql/switches';
+import { SwitchFromOrg, createUpdateSwitch } from '../data/switches';
 
 type Props = {
     lightswitch: SwitchFromOrg;
+    organizationId: string;
 };
 
-const LightSwitch: React.FunctionComponent<Props> = ({ lightswitch }) => {
-    //const [toggleSwitch] = useMutation<SwitchFromOrg>(TOGGLE_SWITCH);
-
-    const toggleSwitch = (test: any) => null;
-
+const LightSwitch: React.FunctionComponent<Props> = ({ lightswitch, organizationId }) => {
     const switchToggledToast = useToast();
     return (
         <Box
@@ -32,12 +29,11 @@ const LightSwitch: React.FunctionComponent<Props> = ({ lightswitch }) => {
                 onChange={async e => {
                     try {
                         const enabled = (e.target as HTMLInputElement).checked;
-                        const result = await toggleSwitch({
-                            variables: {
-                                id: lightswitch.id,
-                                enabled,
-                            },
-                        });
+                        const result = await createUpdateSwitch(
+                            organizationId,
+                            { ...lightswitch, enabled },
+                            { shouldMutate: true, shouldRevalidate: false },
+                        );
 
                         console.log(result);
                         switchToggledToast({
