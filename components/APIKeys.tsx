@@ -1,37 +1,14 @@
+import { Box, IconButton, Text } from '@chakra-ui/core';
 import * as React from 'react';
-import { Box, IconButton, Text, Tooltip, useToast } from '@chakra-ui/core';
 import { useState } from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import { Organization, ORG_URL_KEY } from '../data/organizations';
+
 import useSWR from 'swr';
+import { Organization, ORG_URL_KEY } from '../data/organizations';
+import TooltipWithCopy from './TooltipWithCopy';
+import { KeysSnippet } from './CodeSnippets';
 
 type Props = {
     organizationId: string;
-};
-
-const TooltipWithCopy: React.FunctionComponent<{ text: string }> = ({ children, text }) => {
-    const toast = useToast();
-    return (
-        <Tooltip
-            shouldWrapChildren={true}
-            placement="left-end"
-            aria-label="Click to copy secret"
-            label="Click to copy."
-        >
-            <CopyToClipboard
-                onCopy={() =>
-                    toast({
-                        title: 'Copied!',
-                        duration: 750,
-                        position: 'top',
-                    })
-                }
-                text={text}
-            >
-                {children}
-            </CopyToClipboard>
-        </Tooltip>
-    );
 };
 
 const SecretDisplay: React.FunctionComponent<{ k: string }> = ({ k }) => {
@@ -65,10 +42,6 @@ const SecretDisplay: React.FunctionComponent<{ k: string }> = ({ k }) => {
 };
 
 const APIKeysList: React.FunctionComponent<Props> = ({ organizationId }) => {
-    // const { data, loading, error } = useQuery<{ organization: Organization }>(GET_ORGANIZATION, {
-    //     variables: { id: organizationId },
-    // });
-
     const { data: organization, error } = useSWR<Organization>(`${ORG_URL_KEY}/${organizationId}`, {
         refreshWhenHidden: true,
         revalidateOnFocus: true,
@@ -90,8 +63,8 @@ const APIKeysList: React.FunctionComponent<Props> = ({ organizationId }) => {
                     </Text>
                 </TooltipWithCopy>
             </Box>
-
             <SecretDisplay k={key} />
+            <KeysSnippet clientId={id} apiKey={key}></KeysSnippet>
         </Box>
     );
 };

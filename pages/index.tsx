@@ -22,6 +22,7 @@ import LightSwitch from '../components/Switch';
 import { SwitchDrawer } from '../components/SwitchDrawer';
 import { createOrganization, ORG_URL_KEY, Organization } from '../data/organizations';
 import { SwitchFromOrg } from '../data/switches';
+import { ProviderSnippet } from '../components/CodeSnippets';
 type Props = {
     organizationId: string;
 };
@@ -52,6 +53,17 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
                             </AccordionHeader>
                             <AccordionPanel pb={4}>
                                 <APIKeysList organizationId={organizationId} />
+                            </AccordionPanel>
+                        </AccordionItem>
+                        <AccordionItem>
+                            <AccordionHeader>
+                                <AccordionIcon />
+                                <Box flex="1" ml="9px" color="gray.600" textAlign="left">
+                                    Add Provider
+                                </Box>
+                            </AccordionHeader>
+                            <AccordionPanel pb={4}>
+                                <ProviderSnippet></ProviderSnippet>
                             </AccordionPanel>
                         </AccordionItem>
                     </Accordion>
