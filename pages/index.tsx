@@ -23,6 +23,7 @@ import { SwitchDrawer } from '../components/SwitchDrawer';
 import { createOrganization, ORG_URL_KEY, Organization } from '../data/organizations';
 import { SwitchFromOrg } from '../data/switches';
 import { ProviderSnippet } from '../components/CodeSnippets';
+import SwitchesList from '../components/SwitchesList';
 type Props = {
     organizationId: string;
 };
@@ -97,17 +98,12 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
                     </Button>
                 </Box>
                 <Box shadow="md" borderWidth="1px" flex="1" rounded="md">
-                    {lightswitches.map((lightswitch, i) => (
-                        <Box>
-                            <LightSwitch
-                                onOpen={onOpen}
-                                lightswitch={lightswitch}
-                                organizationId={organizationId}
-                                setCurrentLightswitch={setCurrentLightswitch}
-                            ></LightSwitch>
-                            {i !== lightswitches.length - 1 && <Divider />}
-                        </Box>
-                    ))}
+                    <SwitchesList
+                        onOpen={onOpen}
+                        lightswitches={lightswitches}
+                        organizationId={organizationId}
+                        setCurrentLightswitch={setCurrentLightswitch}
+                    ></SwitchesList>
                 </Box>
             </Stack>
         </Layout>

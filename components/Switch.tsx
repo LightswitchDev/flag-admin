@@ -1,6 +1,16 @@
-import { Box, Switch, Text, useToast, IconButton, Collapse } from '@chakra-ui/core';
+import {
+    AccordionHeader,
+    AccordionIcon,
+    AccordionItem,
+    AccordionPanel,
+    IconButton,
+    Switch,
+    Text,
+    useToast,
+    Grid,
+} from '@chakra-ui/core';
 import * as React from 'react';
-import { SwitchFromOrg, createUpdateSwitch } from '../data/switches';
+import { createUpdateSwitch, SwitchFromOrg } from '../data/switches';
 import { CodeSnippet } from './CodeSnippets';
 
 const getSnippet = (lightswitch: SwitchFromOrg) => {
@@ -11,7 +21,10 @@ const getSnippet = (lightswitch: SwitchFromOrg) => {
     const ${lightswitch.key} = useSwitch('${lightswitch.key}', false);
     return (
         <div>
-            {${lightswitch.key} ? <div>Your feature is enabled</div> : <div>Your feature is disabled</div>}
+            {${lightswitch.key} ? 
+              <div>Your feature is enabled</div> : 
+              <div>Your feature is disabled</div>
+            }
         </div>
     );
 };
@@ -32,82 +45,91 @@ const LightSwitch: React.FunctionComponent<Props> = ({
     setCurrentLightswitch,
 }) => {
     const switchToggledToast = useToast();
-    const [show, setShow] = React.useState(false);
-    const handleToggle = () => setShow(!show);
+    const [accordianDisabled, disableAccordian] = React.useState(false);
 
     return (
-        <>
-            <Box
-                gridColumnGap="15px"
-                marginBottom="4px"
-                rounded="lg"
-                paddingTop="12px"
-                alignItems="center"
-                justifyItems="end"
-                d="grid"
-                gridTemplateColumns=".5fr 1.5fr .4fr .3fr"
-                minH="50px"
-                id={lightswitch.name}
-                onClick={handleToggle}
-            >
-                <Text px="5" justifySelf="start" color="gray.600" fontSize="md">
-                    {lightswitch.name}
-                </Text>
-                <Text justifySelf="start" color="gray.300" fontSize="sm">
-                    {lightswitch.key}
-                </Text>
+        <AccordionItem isDisabled={accordianDisabled}>
+            <AccordionHeader _disabled={{ opacity: 1, cursor: 'allowed' }}>
+                <Grid width="100%" templateColumns=".2fr .4fr 1fr 1fr .4fr" alignItems="center" justifyItems="">
+                    <AccordionIcon />
+                    <Text justifySelf="start" d="grid" px="5" color="gray.600" fontSize="md">
+                        {lightswitch.name}
+                    </Text>
+                    <Text justifySelf="start" d="grid" color="gray.300" fontSize="sm">
+                        {lightswitch.key}
+                    </Text>
 
-                <Switch
-                    onChange={async e => {
-                        try {
-                            const enabled = (e.target as HTMLInputElement).checked;
-                            const result = await createUpdateSwitch(
-                                organizationId,
-                                { ...lightswitch, enabled },
-                                { shouldMutate: true, shouldRevalidate: false },
-                            );
+                    <Switch
+                        onMouseEnter={() => {
+                            disableAccordian(true);
+                        }}
+                        onMouseOver={() => {
+                            disableAccordian(true);
+                        }}
+                        onMouseLeave={e => {
+                            disableAccordian(false);
+                        }}
+                        onChange={async e => {
+                            try {
+                                const enabled = (e.target as HTMLInputElement).checked;
+                                const result = await createUpdateSwitch(
+                                    organizationId,
+                                    { ...lightswitch, enabled },
+                                    { shouldMutate: true, shouldRevalidate: false },
+                                );
 
-                            console.log(result);
-                            switchToggledToast({
-                                title: enabled ? `${lightswitch.name} enabled` : `${lightswitch.name} disabled`,
-                                status: enabled ? 'success' : 'warning',
-                                duration: 2 * 1000,
-                                isClosable: true,
-                            });
-                        } catch (e) {
-                            switchToggledToast({
-                                title: `Failed to toggle ${lightswitch.name}`,
-                                status: 'error',
-                                duration: 2 * 1000,
-                                isClosable: true,
-                            });
-                        }
-                    }}
-                    isChecked={lightswitch.enabled}
-                    color="gray"
-                    d="grid"
-                    size="md"
-                    justifySelf="end"
-                    px="5"
-                ></Switch>
-                <IconButton
-                    variant="ghost"
-                    icon="edit"
-                    d="grid"
-                    justifySelf="end"
-                    aria-label="Edit Switch"
-                    size="sm"
-                    mr="8px"
-                    onClick={() => {
-                        setCurrentLightswitch(lightswitch);
-                        onOpen();
-                    }}
-                ></IconButton>
-            </Box>
-            <Collapse mt={4} isOpen={show}>
+                                switchToggledToast({
+                                    title: enabled ? `${lightswitch.name} enabled` : `${lightswitch.name} disabled`,
+                                    status: enabled ? 'success' : 'warning',
+                                    duration: 2 * 1000,
+                                    isClosable: true,
+                                });
+                                console.log(e);
+                                e.preventDefault();
+                                e.stopPropagation();
+                            } catch (e) {
+                                switchToggledToast({
+                                    title: `Failed to toggle ${lightswitch.name}`,
+                                    status: 'error',
+                                    duration: 2 * 1000,
+                                    isClosable: true,
+                                });
+                            }
+                        }}
+                        isChecked={lightswitch.enabled}
+                        color="gray"
+                        d="grid"
+                        justifySelf="right"
+                        size="md"
+                        px="5"
+                    ></Switch>
+                    <IconButton
+                        justifySelf="right"
+                        variant="ghost"
+                        icon="edit"
+                        aria-label="Edit Switch"
+                        size="sm"
+                        mr="8px"
+                        onMouseEnter={() => {
+                            disableAccordian(true);
+                        }}
+                        onMouseOver={() => {
+                            disableAccordian(true);
+                        }}
+                        onMouseLeave={e => {
+                            disableAccordian(false);
+                        }}
+                        onClick={() => {
+                            setCurrentLightswitch(lightswitch);
+                            onOpen();
+                        }}
+                    ></IconButton>
+                </Grid>
+            </AccordionHeader>
+            <AccordionPanel>
                 <CodeSnippet snippet={getSnippet(lightswitch)}></CodeSnippet>
-            </Collapse>
-        </>
+            </AccordionPanel>
+        </AccordionItem>
     );
 };
 
