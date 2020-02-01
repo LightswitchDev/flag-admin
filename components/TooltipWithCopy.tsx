@@ -5,12 +5,7 @@ const TooltipWithCopy: React.FunctionComponent<{ text: string }> = ({ children, 
     const toast = useToast();
 
     return (
-        <Tooltip
-            shouldWrapChildren={true}
-            placement="left-end"
-            aria-label="Click to copy secret"
-            label="Click to copy."
-        >
+        <Tooltip shouldWrapChildren={true} placement="right-end" aria-label="Click to copy" label="Click to copy.">
             <CopyToClipboard
                 onCopy={() =>
                     toast({

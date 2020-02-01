@@ -17,11 +17,9 @@ const client = new LightswitchClient({
 const CodeSnippet: React.FunctionComponent<{ snippet: string }> = ({ snippet }) => {
     return (
         <Box>
-            <TooltipWithCopy text={snippet}>
-                <SyntaxHighlighter style={codeThemes.vs} language="tsx">
-                    {snippet}
-                </SyntaxHighlighter>
-            </TooltipWithCopy>
+            <SyntaxHighlighter style={codeThemes.vs} language="tsx">
+                {snippet}
+            </SyntaxHighlighter>
             <TooltipWithCopy text={snippet}>
                 <IconButton variant="outline" aria-label="Show Key" size="xs" ml="8px" icon="copy"></IconButton>
             </TooltipWithCopy>

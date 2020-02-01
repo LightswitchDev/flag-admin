@@ -46,16 +46,6 @@ type Props = {
     organizationId: string;
 };
 
-// const firebaseConfig = {
-//     apiKey: 'AIzaSyD9OoGXpvvsaKGIWceTrbOMKSLOtYu1ViY',
-//     authDomain: 'pristine-flames-265923.firebaseapp.com',
-//     projectId: 'pristine-flames-265923',
-//     storageBucket: 'pristine-flames-265923.appspot.com',
-//     messagingSenderId: '734616149062',
-//     appId: '1:734616149062:web:cea02e49ff541df66c3e47',
-//     measurementId: 'G-05BVGTD494',
-// };
-
 const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = React.useRef();
@@ -92,7 +82,7 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
                     firebaseAuth={firebase.auth()}
                 ></StyledFirebaseAuth> */}
                 <Box shadow="md" borderWidth="1px" flex="1" rounded="md">
-                    <Accordion allowToggle defaultIndex={0}>
+                    <Accordion allowToggle defaultIndex={lightswitches.length === 0 ? 0 : -1}>
                         <AccordionItem>
                             <AccordionHeader>
                                 <AccordionIcon />
