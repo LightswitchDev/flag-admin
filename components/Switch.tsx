@@ -107,6 +107,7 @@ const LightSwitch: React.FunctionComponent<Props> = ({
                         justifySelf="right"
                         variant="ghost"
                         icon="edit"
+                        color="gray.500"
                         aria-label="Edit Switch"
                         size="sm"
                         mr="8px"

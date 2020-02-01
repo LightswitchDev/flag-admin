@@ -17,6 +17,7 @@ import {
     PopoverFooter,
     ButtonGroup,
     PopoverTrigger,
+    CSSReset,
 } from '@chakra-ui/core';
 import { NextPage, NextPageContext } from 'next';
 import { parseCookies, setCookie } from 'nookies';
@@ -24,11 +25,12 @@ import * as React from 'react';
 import useSWR from 'swr';
 import APIKeysList from '../components/APIKeys';
 import { ProviderSnippet } from '../components/CodeSnippets';
-import Layout from '../components/Layout';
+import { Header, Layout } from '../components/Layout';
 import { SwitchDrawer } from '../components/SwitchDrawer';
 import SwitchesList from '../components/SwitchesList';
 import { createOrganization, Organization, ORG_URL_KEY } from '../data/organizations';
 import { SwitchFromOrg } from '../data/switches';
+import Head from 'next/head';
 // import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
 // import firebase, { initializeApp } from 'firebase/app';
@@ -55,7 +57,6 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
         revalidateOnFocus: false,
     });
     const [currentLightswitch, setCurrentLightswitch] = React.useState<SwitchFromOrg | undefined>();
-    const [isHelpPopoverOpen, setIsHelpPopoverOpen] = React.useState(false);
 
     // React.useEffect(() => {
     //     if (!firebase.apps.length) {
@@ -69,6 +70,9 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
 
     return (
         <Layout title="Lightswitch">
+            <CSSReset />
+
+            <Header></Header>
             <Stack maxW="2xl" margin="0 auto" pb="10px">
                 {/* <StyledFirebaseAuth
                     uiConfig={{
