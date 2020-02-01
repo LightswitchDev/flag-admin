@@ -10,7 +10,7 @@ interface RequestInitWithBody extends RequestInit {
 
 const fetcher = <T>(url: string, data?: RequestInitWithBody): Promise<T> => {
     const BASE_URL =
-        process.env.NODE_ENV === 'development' ? 'https://flag-api-vykaoik56q-uc.a.run.app' : 'http://localhost:8080';
+        process.env.NODE_ENV === 'production' ? 'https://flag-api-vykaoik56q-uc.a.run.app' : 'http://localhost:8080';
     const fullUrl = `${url.startsWith('/') ? BASE_URL : ''}${url}`;
     console.log(fullUrl);
     return fetch(fullUrl, {
