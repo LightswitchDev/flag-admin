@@ -1,20 +1,6 @@
-import {
-    Accordion,
-    AccordionHeader,
-    AccordionIcon,
-    AccordionItem,
-    AccordionPanel,
-    Box,
-    Grid,
-    IconButton,
-    Switch,
-    useToast,
-    Text,
-} from '@chakra-ui/core';
+import { Accordion, Box } from '@chakra-ui/core';
 import * as React from 'react';
-import { createUpdateSwitch, SwitchFromOrg } from '../data/switches';
-import { CodeSnippet } from './CodeSnippets';
-import { useState } from 'react';
+import { SwitchFromOrg } from '../data/switches';
 import LightSwitch from './Switch';
 
 type Props = {
@@ -24,31 +10,12 @@ type Props = {
     setCurrentLightswitch: (lightswitch: SwitchFromOrg) => void;
 };
 
-const getSnippet = (lightswitch: SwitchFromOrg) => {
-    return `
-    import { useSwitch } from '@lightswitch/client';
-
-    const ExampleComponent = () => {
-    const ${lightswitch.key} = useSwitch('${lightswitch.key}', false);
-    return (
-        <div>
-            {${lightswitch.key} ? 
-              <div>Your feature is enabled</div> : 
-              <div>Your feature is disabled</div>
-            }
-        </div>
-    );
-};
-    `;
-};
-
 const SwitchesList: React.FunctionComponent<Props> = ({
     lightswitches,
     organizationId,
     onOpen,
     setCurrentLightswitch,
 }) => {
-    const switchToggledToast = useToast();
     return (
         <Box shadow="md" borderWidth="1px" flex="1" rounded="md">
             <Accordion allowToggle defaultIndex={-1}>
