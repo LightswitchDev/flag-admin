@@ -1,7 +1,8 @@
 import * as React from 'react';
-import Link from 'next/link';
 import Head from 'next/head';
-import { Box, Heading, Flex, Text, Button } from '@chakra-ui/core';
+import { Box, Heading, Flex, Text, Button, useDisclosure } from '@chakra-ui/core';
+import AuthModal from './AuthModal';
+import { useAuth } from '../lib/auth';
 
 const MenuItems: React.FC = ({ children }) => (
     <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
@@ -11,8 +12,21 @@ const MenuItems: React.FC = ({ children }) => (
 
 const Header: React.FC = props => {
     const [show, setShow] = React.useState(true);
-    const handleToggle = () => setShow(!show);
 
+    const handleToggle = () => setShow(!show);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [isLogin, setIsLogin] = React.useState(false);
+    const openLogin = () => {
+        setIsLogin(true);
+        onOpen();
+    };
+
+    const openSignUp = () => {
+        setIsLogin(false);
+        onOpen();
+    };
+
+    const auth = useAuth();
     return (
         <Flex
             as="nav"
@@ -48,11 +62,22 @@ const Header: React.FC = props => {
                 <MenuItems>Examples</MenuItems>
                 <MenuItems>Blog</MenuItems>
             </Box>
-
+            <AuthModal isLogin={isLogin} onClose={onClose} isOpen={isOpen}></AuthModal>
             <Box display={{ sm: show ? 'block' : 'none', md: 'block' }} mt={{ base: 4, md: 0 }}>
-                <Button bg="transparent" border="1px">
-                    Sign Up!
-                </Button>
+                {auth?.user ? (
+                    <Button ml="5px" width="100px" variant="outline" onClick={auth?.signout}>
+                        Logout
+                    </Button>
+                ) : (
+                    <>
+                        <Button variant="solid" width="100px" borderColor="gray.400" color="black" onClick={openSignUp}>
+                            Get Started
+                        </Button>
+                        <Button ml="5px" width="100px" variant="outline" onClick={openLogin}>
+                            Login
+                        </Button>
+                    </>
+                )}
             </Box>
         </Flex>
     );
