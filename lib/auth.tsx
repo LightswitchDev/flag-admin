@@ -45,6 +45,8 @@ function useProvideAuth(): UserState {
         console.log('use effect');
         if (!firebase.apps.length) {
             initializeApp(firebaseConfig);
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
             console.log('init');
             const unsubscribe = firebase.auth().onAuthStateChanged(user => {
                 if (user) {
