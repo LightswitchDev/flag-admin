@@ -6,18 +6,15 @@ import {
     AccordionPanel,
     Box,
     Button,
-    Stack,
-    useDisclosure,
     Popover,
+    PopoverArrow,
+    PopoverBody,
+    PopoverCloseButton,
     PopoverContent,
     PopoverHeader,
-    PopoverArrow,
-    PopoverCloseButton,
-    PopoverBody,
-    PopoverFooter,
-    ButtonGroup,
     PopoverTrigger,
-    CSSReset,
+    Stack,
+    useDisclosure,
 } from '@chakra-ui/core';
 import { NextPage, NextPageContext } from 'next';
 import { parseCookies, setCookie } from 'nookies';
@@ -30,19 +27,8 @@ import { SwitchDrawer } from '../components/SwitchDrawer';
 import SwitchesList from '../components/SwitchesList';
 import { createOrganization, Organization, ORG_URL_KEY } from '../data/organizations';
 import { SwitchFromOrg } from '../data/switches';
-import Head from 'next/head';
-// import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
-// import firebase, { initializeApp } from 'firebase/app';
-// import 'firebase/auth';
-// import 'firebase/firestore';
-
-// import {
-//     FirebaseAuthProvider,
-//     FirebaseAuthConsumer,
-//     IfFirebaseAuthed,
-//     IfFirebaseAuthedAnd,
-// } from '@react-firebase/auth';
+import { useAuth } from '../lib/auth';
 
 type Props = {
     organizationId: string;
@@ -52,17 +38,14 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = React.useRef();
 
+    const auth = useAuth();
+
     const { data: organization, error } = useSWR<Organization>(`${ORG_URL_KEY}/${organizationId}`, {
         refreshWhenHidden: true,
         revalidateOnFocus: false,
     });
     const [currentLightswitch, setCurrentLightswitch] = React.useState<SwitchFromOrg | undefined>();
 
-    // React.useEffect(() => {
-    //     if (!firebase.apps.length) {
-    //         initializeApp(firebaseConfig);
-    //     }
-    // });
     if (!organization) return <p>Loading</p>;
     if (error) return <p>ERROR: {error.message}</p>;
 
@@ -70,21 +53,8 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
 
     return (
         <Layout title="Lightswitch">
-            <CSSReset />
-
             <Header></Header>
             <Stack maxW="2xl" margin="0 auto" pb="10px">
-                {/* <StyledFirebaseAuth
-                    uiConfig={{
-                        // Popup signin flow rather than redirect flow.
-                        signInFlow: 'popup',
-                        // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-                        signInSuccessUrl: '/',
-                        // We will display Google and Facebook as auth providers.
-                        signInOptions: [firebase.auth.GithubAuthProvider.PROVIDER_ID],
-                    }}
-                    firebaseAuth={firebase.auth()}
-                ></StyledFirebaseAuth> */}
                 <Box shadow="md" borderWidth="1px" flex="1" rounded="md">
                     <Accordion allowToggle defaultIndex={lightswitches.length === 0 ? 0 : -1}>
                         <AccordionItem>

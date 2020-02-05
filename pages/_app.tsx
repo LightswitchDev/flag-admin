@@ -4,18 +4,21 @@ import theme from '../theme';
 
 import { SWRConfig } from 'swr';
 import fetcher from '../lib/fetcher';
+import { ProvideAuth } from '../lib/auth';
 
 class AppWrapper extends App<any> {
     render() {
         const { Component, pageProps } = this.props;
 
         return (
-            <ThemeProvider theme={theme}>
-                <CSSReset />
-                <SWRConfig value={{ fetcher }}>
-                    <Component {...pageProps} />
-                </SWRConfig>
-            </ThemeProvider>
+            <ProvideAuth>
+                <ThemeProvider theme={theme}>
+                    <CSSReset />
+                    <SWRConfig value={{ fetcher }}>
+                        <Component {...pageProps} />
+                    </SWRConfig>
+                </ThemeProvider>
+            </ProvideAuth>
         );
     }
 }

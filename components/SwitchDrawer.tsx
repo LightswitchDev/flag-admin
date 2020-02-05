@@ -14,7 +14,7 @@ import {
 import { Formik, Form, Field } from 'formik';
 import { createUpdateSwitch, SwitchFromOrg } from '../data/switches';
 
-type FieldChildrenProps = {
+export type FieldChildrenProps = {
     field: { onChange: () => void; onBlur: () => void; name: string; value: any };
 };
 
