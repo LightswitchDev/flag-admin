@@ -29,6 +29,7 @@ import { createOrganization, Organization, ORG_URL_KEY } from '../data/organizat
 import { SwitchFromOrg } from '../data/switches';
 
 import { useAuth } from '../lib/auth';
+import CodeSandbox from '../components/CodeSandbox';
 
 type Props = {
     organizationId: string;
@@ -39,7 +40,7 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const btnRef = React.useRef();
 
     const auth = useAuth();
-
+    console.log();
     const { data: organization, error } = useSWR<Organization>(`${ORG_URL_KEY}/${organizationId}`, {
         refreshWhenHidden: true,
         revalidateOnFocus: false,

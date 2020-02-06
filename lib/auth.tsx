@@ -42,10 +42,8 @@ type UserState = {
 function useProvideAuth(): UserState {
     const [user, setUser] = useState<firebase.User | null>(null);
     React.useEffect(() => {
-        console.log('use effect');
         if (!firebase.apps.length) {
             initializeApp(firebaseConfig);
-            console.log('init');
             const unsubscribe = firebase.auth().onAuthStateChanged(user => {
                 if (user) {
                     setUser(user);
@@ -57,7 +55,7 @@ function useProvideAuth(): UserState {
             // Subscription unsubscribe function
             return () => unsubscribe();
         }
-    });
+    }, []);
     const signin = (email: string, password: string) => {
         return firebase
             .auth()

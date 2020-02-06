@@ -27,6 +27,7 @@ const Header: React.FC = props => {
     };
 
     const auth = useAuth();
+
     return (
         <Flex
             as="nav"

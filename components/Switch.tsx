@@ -131,6 +131,7 @@ const LightSwitch: React.FunctionComponent<Props> = ({
                 <CodeSnippet snippet={getSnippet(lightswitch)}></CodeSnippet>
             </AccordionPanel>
         </AccordionItem>
+        
     );
 };
 
