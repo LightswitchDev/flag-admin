@@ -17,7 +17,9 @@ const fetcher = async <T>(url: string, data?: RequestInitWithBody): Promise<T> =
 
     //TODO: do we need to set a cookie instead of local storage to make SSR calls work?
     //right now we just fetch an anonymous org, but in the future this might be different
-    const idToken = await (typeof window !== 'undefined' ? '' : firebase.auth().currentUser?.getIdToken());
+    const idToken = await (typeof window !== 'undefined' || !firebase.apps.length
+        ? ''
+        : firebase.auth().currentUser?.getIdToken());
     const fullUrl = `${url.startsWith('/') ? BASE_URL : ''}${url}`;
     return fetch(fullUrl, {
         ...data,
