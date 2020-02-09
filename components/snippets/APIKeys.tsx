@@ -3,9 +3,9 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import useSWR from 'swr';
-import { Organization, ORG_URL_KEY } from '../data/organizations';
-import TooltipWithCopy from './TooltipWithCopy';
-import { KeysSnippet } from './CodeSnippets';
+import { Organization, ORG_URL_KEY } from '../../data/organizations';
+import TooltipWithCopy from '../TooltipWithCopy';
+import { KeysSnippet } from '../CodeSnippets';
 
 type Props = {
     organizationId: string;
