@@ -16,7 +16,7 @@ const client = new LightswitchClient({
 
 const CodeSnippet: React.FunctionComponent<{ snippet: string }> = ({ snippet }) => {
     return (
-        <Box>
+        <Box maxWidth={["100%", "100%", "80%", "70%"]}>
             <SyntaxHighlighter style={codeThemes.vs} language="tsx">
                 {snippet}
             </SyntaxHighlighter>

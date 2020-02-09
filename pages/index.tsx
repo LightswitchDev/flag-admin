@@ -1,12 +1,6 @@
 import {
-    Accordion,
-    AccordionHeader,
-    AccordionIcon,
-    AccordionItem,
-    AccordionPanel,
     Box,
     Button,
-    Stack,
     useDisclosure,
     Popover,
     PopoverContent,
@@ -14,23 +8,20 @@ import {
     PopoverArrow,
     PopoverCloseButton,
     PopoverBody,
-    PopoverFooter,
-    ButtonGroup,
     PopoverTrigger,
-    CSSReset,
+    Heading,
 } from '@chakra-ui/core';
 import { NextPage, NextPageContext } from 'next';
-import { parseCookies, setCookie } from 'nookies';
 import * as React from 'react';
 import useSWR from 'swr';
-import APIKeysList from '../components/APIKeys';
-import { ProviderSnippet } from '../components/CodeSnippets';
-import { Header, Layout } from '../components/Layout';
+import APIKeysList from '../components/snippets/APIKeys';
+import { Navigation } from '../components/Navigation';
 import { SwitchDrawer } from '../components/SwitchDrawer';
 import SwitchesList from '../components/SwitchesList';
-import { createOrganization, Organization, ORG_URL_KEY } from '../data/organizations';
+import { Organization, ORG_URL_KEY } from '../data/organizations';
 import { SwitchFromOrg } from '../data/switches';
-import Head from 'next/head';
+import { getOrganizationId } from "./helpers/getOrganization";
+
 // import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
 // import firebase, { initializeApp } from 'firebase/app';
@@ -69,11 +60,8 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const { lightswitches } = organization;
 
     return (
-        <Layout title="Lightswitch">
-            <CSSReset />
-
-            <Header></Header>
-            <Stack maxW="2xl" margin="0 auto" pb="10px">
+        <Navigation>
+            <Box padding="1em">
                 {/* <StyledFirebaseAuth
                     uiConfig={{
                         // Popup signin flow rather than redirect flow.
@@ -85,32 +73,9 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
                     }}
                     firebaseAuth={firebase.auth()}
                 ></StyledFirebaseAuth> */}
-                <Box shadow="md" borderWidth="1px" flex="1" rounded="md">
-                    <Accordion allowToggle defaultIndex={lightswitches.length === 0 ? 0 : -1}>
-                        <AccordionItem>
-                            <AccordionHeader>
-                                <AccordionIcon />
-                                <Box flex="1" ml="9px" fontWeight="bold" color="gray.600" textAlign="left">
-                                    Get your Client Keys
-                                </Box>
-                            </AccordionHeader>
-                            <AccordionPanel pb={4}>
-                                <APIKeysList organizationId={organizationId} />
-                            </AccordionPanel>
-                        </AccordionItem>
-                        <AccordionItem>
-                            <AccordionHeader>
-                                <AccordionIcon />
-                                <Box flex="1" ml="9px" fontWeight="bold" color="gray.600" textAlign="left">
-                                    Add Provider
-                                </Box>
-                            </AccordionHeader>
-                            <AccordionPanel pb={4}>
-                                <ProviderSnippet></ProviderSnippet>
-                            </AccordionPanel>
-                        </AccordionItem>
-                    </Accordion>
-                </Box>
+                <Heading>Get your Client Keys</Heading>
+
+                <APIKeysList organizationId={organizationId} />
 
                 <Box flex="1">
                     <SwitchDrawer
@@ -166,22 +131,13 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
                         ></SwitchesList>
                     </Box>
                 )}
-            </Stack>
-        </Layout>
+            </Box>
+        </Navigation>
     );
 };
 
 IndexPage.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
-    const cookies = parseCookies(ctx);
-    let organizationId: string = cookies['lightswitch'];
-    if (!organizationId) {
-        const { organization } = await createOrganization({ shouldMutate: true });
-        organizationId = organization.id;
-
-        if (organizationId) {
-            setCookie(ctx, 'lightswitch', organizationId, { maxAge: 60 * 60 * 24 * 30 * 1000 });
-        }
-    }
+    const organizationId = await getOrganizationId(ctx);
 
     return { organizationId };
 };
