@@ -3,13 +3,13 @@ import {
     Button,
     useDisclosure,
     Popover,
-    PopoverContent,
-    PopoverHeader,
     PopoverArrow,
-    PopoverCloseButton,
     PopoverBody,
     PopoverTrigger,
     Heading,
+    PopoverContent,
+    PopoverHeader,
+    PopoverCloseButton,
 } from '@chakra-ui/core';
 import { NextPage, NextPageContext } from 'next';
 import * as React from 'react';
@@ -22,18 +22,7 @@ import { Organization, ORG_URL_KEY } from '../data/organizations';
 import { SwitchFromOrg } from '../data/switches';
 import { getOrganizationId } from "./helpers/getOrganization";
 
-// import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-
-// import firebase, { initializeApp } from 'firebase/app';
-// import 'firebase/auth';
-// import 'firebase/firestore';
-
-// import {
-//     FirebaseAuthProvider,
-//     FirebaseAuthConsumer,
-//     IfFirebaseAuthed,
-//     IfFirebaseAuthedAnd,
-// } from '@react-firebase/auth';
+import { useAuth } from '../lib/auth';
 
 type Props = {
     organizationId: string;
@@ -43,17 +32,14 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = React.useRef();
 
+    const auth = useAuth();
+    console.log();
     const { data: organization, error } = useSWR<Organization>(`${ORG_URL_KEY}/${organizationId}`, {
         refreshWhenHidden: true,
         revalidateOnFocus: false,
     });
     const [currentLightswitch, setCurrentLightswitch] = React.useState<SwitchFromOrg | undefined>();
 
-    // React.useEffect(() => {
-    //     if (!firebase.apps.length) {
-    //         initializeApp(firebaseConfig);
-    //     }
-    // });
     if (!organization) return <p>Loading</p>;
     if (error) return <p>ERROR: {error.message}</p>;
 
@@ -62,17 +48,6 @@ const IndexPage: NextPage<Props> = ({ organizationId }) => {
     return (
         <Navigation>
             <Box padding="1em">
-                {/* <StyledFirebaseAuth
-                    uiConfig={{
-                        // Popup signin flow rather than redirect flow.
-                        signInFlow: 'popup',
-                        // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-                        signInSuccessUrl: '/',
-                        // We will display Google and Facebook as auth providers.
-                        signInOptions: [firebase.auth.GithubAuthProvider.PROVIDER_ID],
-                    }}
-                    firebaseAuth={firebase.auth()}
-                ></StyledFirebaseAuth> */}
                 <Heading>Get your Client Keys</Heading>
 
                 <APIKeysList organizationId={organizationId} />
