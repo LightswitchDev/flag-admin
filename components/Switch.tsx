@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/core';
 import * as React from 'react';
 import { createUpdateSwitch, SwitchFromOrg } from '../data/switches';
-import { CodeSnippet } from './CodeSnippets';
+import { CodeSnippet } from './snippets/CodeSnippets';
 
 const getSnippet = (lightswitch: SwitchFromOrg) => {
     return `

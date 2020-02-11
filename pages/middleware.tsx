@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { Navigation, WithLeftPaneNavigation, RightPaneAnchor } from '../components/Navigation';
 import { NextPage, NextPageContext } from 'next';
-import APIKeysList from '../components/snippets/APIKeys';
 import { ProviderSnippet } from '../components/snippets/ProviderSnippet';
-import { UseTheClientSnippet } from "../components/snippets/UseTheClient";
 import useSWR from 'swr';
 import { Organization, ORG_URL_KEY } from '../data/organizations';
 import { getOrganizationId } from './helpers/getOrganization';
-import { Box } from '@chakra-ui/core';
 
 type Props = {
     organizationId: string;
@@ -22,24 +19,14 @@ const GetStartedPage: NextPage<Props> = ({ organizationId }) => {
     if (!organization) return <p>Loading</p>;
     if (error) return <p>ERROR: {error.message}</p>;
 
-    return (<Navigation title="Getting Started">
+    return (<Navigation title="Middleware">
         <WithLeftPaneNavigation>
-            <RightPaneAnchor anchor="" title="Get your Client Keys" />
+            <RightPaneAnchor anchor="react" title="React" />
+            <ProviderSnippet></ProviderSnippet>
 
-            <APIKeysList organizationId={organizationId} />
-            <RightPaneAnchor anchor="using-the-client" title="Using the Client" />
-            <Box marginBottom="1em">
-                <p>
-                    Before you get started with the javascript client, we support several frameworks out-of-the-box:
-                    <ul>
-                        <li>React</li>
-                        <li>Redux</li>
-                        <li>Redux Sagas</li>
-                        <li>Node js - Express middleware</li>
-                    </ul>
-                </p>
-            </Box>
-            <UseTheClientSnippet />
+            <RightPaneAnchor anchor="redux" title="React / Redux" />
+            <RightPaneAnchor anchor="redux" title="React / Redux / Sagas" />
+            <RightPaneAnchor anchor="redux" title="Node / Express Middleware" />
         </WithLeftPaneNavigation>
     </Navigation>);
 };

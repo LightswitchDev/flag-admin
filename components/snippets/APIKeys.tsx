@@ -5,7 +5,7 @@ import { useState } from 'react';
 import useSWR from 'swr';
 import { Organization, ORG_URL_KEY } from '../../data/organizations';
 import TooltipWithCopy from '../TooltipWithCopy';
-import { KeysSnippet } from '../CodeSnippets';
+import { KeysSnippet } from './KeysSnippet';
 
 type Props = {
     organizationId: string;

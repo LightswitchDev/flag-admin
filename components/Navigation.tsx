@@ -108,6 +108,14 @@ const NavigationSection = styled.div`
   margin-top: 0.5em;
 `;
 
+type LeftPaneLinkProps = {
+  href: string;
+  title: string;
+};
+const LeftPaneLink: React.FunctionComponent<LeftPaneLinkProps> = ({ href, title }) => (<Box>
+  <Link href={href}><a>{title}</a></Link>
+</Box>);
+
 const WithLeftPaneNavigation: React.FC = ({ children }) => {
   const router = useRouter();
   return (
@@ -117,12 +125,10 @@ const WithLeftPaneNavigation: React.FC = ({ children }) => {
 
         <NavigationSection>
           <Heading as="h2" size="md" style={{ "textDecoration": router.pathname === "/" ? "underline" : "normal" }}>Getting Started</Heading>
-          <Box>
-            <Link href="/"><a>Get your Client keys</a></Link>
-          </Box>
-          <Box>
-            <Link href="/#ReactProvider"><a>Add the React Provider</a></Link>
-          </Box>
+          <LeftPaneLink href="/get-started" title="Get your Client keys" />
+          <LeftPaneLink href="/get-started#using-the-client" title="Using the client" />
+          <Heading as="h2" size="md" style={{ "textDecoration": router.pathname === "/" ? "underline" : "normal" }}>Middleware</Heading>
+          <LeftPaneLink href="/middleware#react" title="React" />
         </NavigationSection>
       </Box>
       <Box w={["100%", "100%", "70%", "80%"]} padding="1em">
